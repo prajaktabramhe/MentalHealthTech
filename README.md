@@ -1,16 +1,83 @@
-# React + Vite
+🌿 MindfulSpace – Mental Wellness Web App
+------------------------------------------
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+MindfulSpace is a React-based Mental Wellness Web Application designed to help users track their emotions, write reflections, and monitor their mental well-being in a simple and calming digital space.
+The app focuses on emotional awareness through mood tracking, journaling, visual trends, and a wellness AI companion interface.
 
-Currently, two official plugins are available:
+🚀 Features:
+------------
+😊 Emoji-based Mood Tracker
+📝 Journal with timestamped entries
+📊 Custom Weekly Mood Trend Chart
+🤖 AI Wellness Companion (Chatbot UI) (Currently Mock data)
+📈 Dashboard with wellness statistics
+📱 Fully Responsive Navigation Bar
+💾 Data persistence using localStorage
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+🛠 Tech Stack
+-----------------
+React 19 – UI Library
+React Router v7 – Routing
+Tailwind CSS – Styling
+Lucide React – Icons
+Vite – Build Tool
+localStorage – Data Persistence
 
-## React Compiler
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+📂 Project Structure
+src/
+ ├── components/
+ │    ├── Navbar.jsx
+ │    ├── Chart.jsx
+      ├── Footer.jsx
+ 
+ │
+ ├── pages/
+ │    ├── Home.jsx
+ │    ├── Mood.jsx
+ │    ├── Journal.jsx
+ │    ├── Chatbot.jsx
+ │    ├── Dashboard.jsx
+ │
+ ├── data/
+ │    ├── moodData.js
+ │    ├── quotes.js
+ │
+ ├── App.jsx
+ ├── main.jsx
 
-## Expanding the ESLint configuration
+ 
+⚙️ Installation & Setup
+-------------------------
+Install Vite, React, React Router DOM, and Tailwind CSS.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Run the appliction using command: 
+npm run dev
+
+
+📊 How It Works
+Mood and journal entries are stored using localStorage
+Data is retrieved on component mount using useEffect
+Lists are rendered dynamically using map()
+Navigation is handled using React Router
+
+🧠 Concepts Used
+React Hooks (useState, useEffect)
+Controlled Components
+Conditional Rendering
+Array Methods (map, spread operator)
+State Immutability
+Dynamic Styling
+Component-Based Architecture
+Responsive UI Design
+
+🔮 Future Improvements
+Backend integration (API + Node.js + Database)
+Authentication system
+Real AI API integration
+Dynamic average mood calculation using reduce()
+User streak tracking logic
+
+👩‍💻 Author
+Prajakta Bramhe
+Frontend Developer | React Enthusiast
