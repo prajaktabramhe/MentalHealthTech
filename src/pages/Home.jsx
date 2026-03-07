@@ -1,8 +1,29 @@
 import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function Home() {
+
+  const [quote, setQuote] = useState("");
+  const [author, setAuthor] = useState("");
+
+  useEffect(() => {
+
+    axios
+      .get("http://localhost:5000/api/affirmations")
+      .then(res => {
+        setQuote(res.data.quote);
+        setAuthor(res.data.author);
+      })
+      .catch(err => {
+        console.error("Failed to fetch affirmation", err);
+      });
+
+  }, []);
+
   return (
     <div className="bg-gradient-to-b from-teal-50 to-white min-h-screen">
+
       {/* Hero Section */}
       <section className="text-center py-24 px-6">
         <h1 className="text-4xl md:text-5xl font-bold mb-6">
@@ -22,8 +43,26 @@ export default function Home() {
         </Link>
       </section>
 
+      {/* Daily Affirmation */}
+      <section className="max-w-2xl mx-auto mb-16 px-6">
+        <div className="bg-white p-6 rounded-xl shadow text-center">
+          <h2 className="text-xl font-semibold mb-3">🌿 Daily Affirmation</h2>
+
+          {quote ? (
+            <>
+              <p className="text-gray-700 italic">"{quote}"</p>
+              <p className="text-sm text-gray-400 mt-2">— {author}</p>
+            </>
+          ) : (
+            <p className="text-gray-400">Loading affirmation...</p>
+          )}
+
+        </div>
+      </section>
+
       {/* Features Section */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-8 px-8 pb-20 max-w-6xl mx-auto">
+
         <div className="bg-white p-6 rounded-xl shadow-md text-center">
           <h3 className="text-xl font-semibold mb-3">😊 Mood Tracker</h3>
           <p className="text-gray-600">
@@ -44,6 +83,7 @@ export default function Home() {
             Chat with your wellness assistant for guidance and motivation.
           </p>
         </div>
+
       </section>
     </div>
   );

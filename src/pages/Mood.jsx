@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import Chart from "../components/Chart";
+import axios from "axios";
 
 const Mood = () => {
   const moods = ["😊", "😔", "😰", "😌", "😡"];
+  const [exercises, setExercises] = useState([]);
 
-  // ✅ Initialize state from localStorage
+  // Initialize state from localStorage
   const [selectedMood, setSelectedMood] = useState(() => {
     const saved = localStorage.getItem("MoodEntry");
     return saved ? JSON.parse(saved).selectedMood : "";
@@ -15,13 +16,25 @@ const Mood = () => {
     return saved ? JSON.parse(saved).note : "";
   });
 
-  // ✅ Save to localStorage whenever mood or note changes
+  // Save mood to localStorage
   useEffect(() => {
     localStorage.setItem(
       "MoodEntry",
       JSON.stringify({ selectedMood, note })
     );
   }, [selectedMood, note]);
+
+  // Fetch exercises from backend
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/exercises")
+      .then((res) => {
+        setExercises(res.data);
+      })
+      .catch((err) => {
+        console.error("Error fetching exercises:", err);
+      });
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#f3f6f4]">
@@ -62,8 +75,29 @@ const Mood = () => {
           🌿 "Every emotion is valid."
         </p>
 
-        {/* Weekly Chart */}
-        <Chart/>
+        {/* Exercises Section */}
+        <h2 className="text-2xl font-semibold text-center mt-12 mb-6">
+          🧘 Relaxation Exercises
+        </h2>
+
+        <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          {exercises.map((exercise, index) => (
+            <div
+              key={index}
+              className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition"
+            >
+              <h3 className="text-lg font-semibold text-teal-700 mb-3">
+                {exercise.name}
+              </h3>
+
+              <ul className="list-disc ml-5 text-gray-600 space-y-2">
+                {exercise.steps.map((step, i) => (
+                  <li key={i}>{step}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
