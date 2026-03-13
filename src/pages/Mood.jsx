@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 const Mood = () => {
-
+const API = import.meta.env.VITE_API_URL;
   const moods = [
     { emoji: "😊", value: "Happy" },
     { emoji: "😔", value: "Sad" },
@@ -19,10 +19,11 @@ const Mood = () => {
 
   // Fetch moods from MongoDB
   const fetchMoods = async () => {
+     if (!token) return;
     try {
 
       const res = await axios.get(
-        "http://localhost:5000/api/moods",
+        `${API}/api/moods`,
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -39,7 +40,7 @@ const Mood = () => {
 
   useEffect(() => {
     fetchMoods();
-  }, []);
+  }, [[API, token]]);
 
   // Save mood
   const saveMood = async () => {
@@ -51,7 +52,7 @@ const Mood = () => {
       }
 
       await axios.post(
-        "http://localhost:5000/api/moods",
+       `${API}/api/moods`,
         {
           moodType: selectedMood,
           note: note
@@ -78,7 +79,7 @@ const Mood = () => {
     try {
 
       await axios.delete(
-        `http://localhost:5000/api/moods/${id}`,
+        `${API}/api/moods/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`

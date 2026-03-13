@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 const Journal = () => {
+    const API = import.meta.env.VITE_API_URL;
 
   const [entry, setEntry] = useState("");
   const [entries, setEntries] = useState([]);
@@ -13,7 +14,7 @@ const Journal = () => {
     const fetchJournals = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:5000/api/journals",
+             `${API}/api/journals`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -29,7 +30,7 @@ const Journal = () => {
     };
 
     fetchJournals();
-  }, []);
+  }, [API, token]);
 
   // Add journal entry
   const addEntry = async () => {
@@ -39,7 +40,7 @@ const Journal = () => {
     try {
 
       const res = await axios.post(
-        "http://localhost:5000/api/journals",
+         `${API}/api/journals`,
         {
           title: "My Journal",
           content: entry

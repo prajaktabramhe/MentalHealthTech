@@ -3,14 +3,14 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function Home() {
-
+const API = import.meta.env.VITE_API_URL;
   const [quote, setQuote] = useState("");
   const [author, setAuthor] = useState("");
 
   useEffect(() => {
 
     axios
-      .get("http://localhost:5000/api/affirmations")
+      .get( `${API}/api/affirmations`)
       .then(res => {
         setQuote(res.data.quote);
         setAuthor(res.data.author);
@@ -19,7 +19,7 @@ export default function Home() {
         console.error("Failed to fetch affirmation", err);
       });
 
-  }, []);
+  }, [API]);
 
   return (
     <div className="bg-gradient-to-b from-teal-50 to-white min-h-screen">

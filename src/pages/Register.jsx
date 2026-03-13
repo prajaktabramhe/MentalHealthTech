@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Register = () => {
-
+const API = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -23,11 +23,14 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    if (!form.name || !form.email || !form.password) {
+    setMessage("Please fill all fields");
+    return;
+    }
     try {
 
       const res = await axios.post(
-        "http://localhost:5000/auth/register",
+        `${API}/auth/register`,
         form
       );
 

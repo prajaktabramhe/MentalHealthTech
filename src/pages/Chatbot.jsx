@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 
 const Chatbot = () => {
-
+const API = import.meta.env.VITE_API_URL;
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -40,7 +40,7 @@ const Chatbot = () => {
     try {
 
       const res = await axios.post(
-        "http://localhost:5000/api/chat",
+        `${API}/api/chat`,
         { message: userMessage.text }
       );
 
