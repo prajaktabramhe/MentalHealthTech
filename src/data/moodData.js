@@ -4,5 +4,5 @@ export const moodData = [
   { day: "Tue", mood: 4 },
   { day: "Wed", mood: 2 },
   { day: "Thu", mood: 5 },
-  { day: "Fri", mood: 4 },
+  { day: "Fri", mood: 7},
 ];

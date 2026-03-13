@@ -2,103 +2,192 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 const Mood = () => {
-  const moods = ["😊", "😔", "😰", "😌", "😡"];
-  const [exercises, setExercises] = useState([]);
 
-  // Initialize state from localStorage
-  const [selectedMood, setSelectedMood] = useState(() => {
-    const saved = localStorage.getItem("MoodEntry");
-    return saved ? JSON.parse(saved).selectedMood : "";
-  });
+  const moods = [
+    { emoji: "😊", value: "Happy" },
+    { emoji: "😔", value: "Sad" },
+    { emoji: "😰", value: "Stressed" },
+    { emoji: "😌", value: "Relaxed" },
+    { emoji: "😡", value: "Angry" }
+  ];
 
-  const [note, setNote] = useState(() => {
-    const saved = localStorage.getItem("MoodEntry");
-    return saved ? JSON.parse(saved).note : "";
-  });
+  const [selectedMood, setSelectedMood] = useState("");
+  const [note, setNote] = useState("");
+  const [moodHistory, setMoodHistory] = useState([]);
 
-  // Save mood to localStorage
+  const token = localStorage.getItem("token");
+
+  // Fetch moods from MongoDB
+  const fetchMoods = async () => {
+    try {
+
+      const res = await axios.get(
+        "http://localhost:5000/api/moods",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
+      setMoodHistory(res.data);
+
+    } catch (error) {
+      console.error("Error fetching moods:", error);
+    }
+  };
+
   useEffect(() => {
-    localStorage.setItem(
-      "MoodEntry",
-      JSON.stringify({ selectedMood, note })
-    );
-  }, [selectedMood, note]);
-
-  // Fetch exercises from backend
-  useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/exercises")
-      .then((res) => {
-        setExercises(res.data);
-      })
-      .catch((err) => {
-        console.error("Error fetching exercises:", err);
-      });
+    fetchMoods();
   }, []);
 
+  // Save mood
+  const saveMood = async () => {
+    try {
+
+      if (!selectedMood) {
+        alert("Please select a mood");
+        return;
+      }
+
+      await axios.post(
+        "http://localhost:5000/api/moods",
+        {
+          moodType: selectedMood,
+          note: note
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
+      setNote("");
+      setSelectedMood("");
+
+      fetchMoods();
+
+    } catch (error) {
+      console.error("Error saving mood:", error);
+    }
+  };
+
+  // Delete mood
+  const deleteMood = async (id) => {
+    try {
+
+      await axios.delete(
+        `http://localhost:5000/api/moods/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
+      fetchMoods();
+
+    } catch (error) {
+      console.error("Error deleting mood:", error);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-[#f3f6f4]">
-      <div className="p-10">
-        <h1 className="text-3xl font-bold text-center mb-10">
-          How are you feeling today?
-        </h1>
+    <div className="min-h-screen bg-[#f3f6f4] p-10">
 
-        {/* Mood Selection */}
-        <div className="flex justify-center gap-6 mb-8">
-          {moods.map((mood, index) => (
-            <button
-              key={index}
-              onClick={() => setSelectedMood(mood)}
-              className={`text-4xl p-4 rounded-xl transition ${
-                selectedMood === mood
-                  ? "bg-[#297194] text-white"
-                  : "bg-white hover:bg-gray-100"
-              }`}
-            >
-              {mood}
-            </button>
-          ))}
-        </div>
+      <h1 className="text-3xl font-bold text-center mb-10">
+        How are you feeling today?
+      </h1>
 
-        {/* Reflection Input */}
-        <div className="max-w-xl mx-auto">
-          <textarea
-            placeholder="Write a short reflection..."
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            className="w-full p-4 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400"
-          />
-        </div>
+      {/* Mood Selection */}
+      <div className="flex justify-center gap-6 mb-8">
 
-        {/* Affirmation */}
-        <p className="text-center mt-8 italic text-gray-600">
-          🌿 "Every emotion is valid."
-        </p>
+        {moods.map((mood, index) => (
 
-        {/* Exercises Section */}
-        <h2 className="text-2xl font-semibold text-center mt-12 mb-6">
-          🧘 Relaxation Exercises
-        </h2>
+          <button
+            key={index}
+            onClick={() => setSelectedMood(mood.value)}
+            className={`text-4xl p-4 rounded-xl ${
+              selectedMood === mood.value
+                ? "bg-[#297194] text-white"
+                : "bg-white"
+            }`}
+          >
+            {mood.emoji}
+          </button>
 
-        <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-          {exercises.map((exercise, index) => (
-            <div
-              key={index}
-              className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition"
-            >
-              <h3 className="text-lg font-semibold text-teal-700 mb-3">
-                {exercise.name}
-              </h3>
+        ))}
 
-              <ul className="list-disc ml-5 text-gray-600 space-y-2">
-                {exercise.steps.map((step, i) => (
-                  <li key={i}>{step}</li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
       </div>
+
+      {/* Note */}
+      <div className="max-w-xl mx-auto">
+
+        <textarea
+          placeholder="Write a short reflection..."
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          className="w-full p-4 rounded-xl border"
+        />
+
+        <div className="text-center mt-4">
+          <button
+            onClick={saveMood}
+            className="bg-[#297194] text-white px-6 py-2 rounded-lg"
+          >
+            Save Mood
+          </button>
+        </div>
+
+      </div>
+
+      {/* Mood History */}
+
+      <h2 className="text-2xl font-semibold text-center mt-12 mb-6">
+        Your Mood History
+      </h2>
+
+      <div className="max-w-3xl mx-auto space-y-4">
+
+        {moodHistory.map((mood) => (
+
+          <div
+            key={mood._id}
+            className="bg-white p-4 rounded-xl shadow flex justify-between items-center"
+          >
+
+            <div>
+
+              <p className="font-semibold">
+                Mood: {mood.moodType}
+              </p>
+
+              {mood.note && (
+                <p className="text-gray-600">
+                  {mood.note}
+                </p>
+              )}
+
+              <p className="text-sm text-gray-400">
+                {new Date(mood.date).toLocaleDateString()}
+              </p>
+
+            </div>
+
+            <button
+              onClick={() => deleteMood(mood._id)}
+              className="bg-red-500 text-white px-3 py-1 rounded"
+            >
+              Delete
+            </button>
+
+          </div>
+
+        ))}
+
+      </div>
+
     </div>
   );
 };

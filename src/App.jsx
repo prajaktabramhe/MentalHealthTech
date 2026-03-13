@@ -6,6 +6,9 @@ import Mood from "./pages/Mood";
 import Journal from "./pages/Journal";
 import Dashboard from "./pages/Dashboard";
 import Chatbot from "./pages/Chatbot";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
@@ -14,13 +17,52 @@ function App() {
 
       <div className="flex-grow">
         <Routes>
+
+          {/* Public Routes */}
           <Route path="/" element={<Home />} />
-          <Route path="/mood" element={<Mood />} />
-          <Route path="/journal" element={<Journal />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/chatbot" element={<Chatbot />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+
+          {/* Protected Routes */}
+          <Route
+            path="/mood"
+            element={
+              <ProtectedRoute>
+                <Mood />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/journal"
+            element={
+              <ProtectedRoute>
+                <Journal />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/chatbot"
+            element={
+              <ProtectedRoute>
+                <Chatbot />
+              </ProtectedRoute>
+            }
+          />
+
         </Routes>
       </div>
+
       <Footer />
     </div>
   );

@@ -1,28 +1,43 @@
 import { moodData } from "../data/moodData";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid
+} from "recharts";
 
 function Chart() {
   return (
-    <div className="mt-16 max-w-2xl mx-auto bg-white border border-gray-200 rounded-2xl shadow-lg p-8">
-      
+    <div className="mt-16 max-w-3xl mx-auto bg-white border border-gray-200 rounded-2xl shadow-lg p-8">
+
       <h2 className="text-xl font-semibold text-center mb-6 text-gray-700">
         Weekly Mood Trend
       </h2>
 
-      <div className="flex justify-center items-end gap-4 h-40">
-        {moodData.map((item, index) => (
-          <div
-            key={index}
-            className="w-8 bg-[#297194] rounded-t-lg transition-all duration-300 hover:opacity-80"
-            style={{ height: `${item.mood * 25}px` }}
-          ></div>
-        ))}
-      </div>
+      <ResponsiveContainer width="100%" height={300}>
 
-      <div className="flex justify-center gap-6 mt-4 text-sm text-gray-500">
-        {moodData.map((item, index) => (
-          <span key={index}>{item.day}</span>
-        ))}
-      </div>
+        <BarChart data={moodData}>
+
+          <CartesianGrid strokeDasharray="3 3" />
+
+          <XAxis dataKey="day" />
+
+          <YAxis domain={[0,5]} />
+
+          <Tooltip />
+
+          <Bar
+            dataKey="mood"
+            fill="#297194"
+            radius={[8,8,0,0]}
+          />
+
+        </BarChart>
+
+      </ResponsiveContainer>
 
     </div>
   );
